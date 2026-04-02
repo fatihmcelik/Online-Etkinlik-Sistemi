@@ -18,8 +18,14 @@ public class Speaker {
     @Column(nullable = false)
     private String lastName;
 
+    // YENİ: Unvan — Dr., Prof., Uzm. vb.
+    private String title;
+
     @Column(columnDefinition = "TEXT")
     private String bio;
+
+    // YENİ: Konuşmacı fotoğrafı
+    private String photoUrl;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -35,8 +41,12 @@ public class Speaker {
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }
+    public String getPhotoUrl() { return photoUrl; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
     public Set<Event> getEvents() { return events; }
     public void setEvents(Set<Event> events) { this.events = events; }
 }
