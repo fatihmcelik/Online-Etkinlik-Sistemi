@@ -1,0 +1,126 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.payment-container {
+    position: relative;
+    background: #fff;
+    padding: 40px 30px 30px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.back-link {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: #e2e6ea;
+    color: #000;
+    border-color: #ccc;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.card-visual {
+    background: linear-gradient(135deg, #1d2b64, #f80759);
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 25px;
+    position: relative;
+    height: 160px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.chip {
+    width: 40px;
+    height: 30px;
+    background: #ffd700;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.card-number-display {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.card-holder-display {
+    float: left;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.card-expiry-display {
+    float: right;
+    font-size: 0.8rem;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+}
+
+.pay-btn {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.pay-btn:hover {
+    background-color: #218838;
+}
