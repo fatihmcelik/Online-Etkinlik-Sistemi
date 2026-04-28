@@ -12,27 +12,33 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); 
+        return new BCryptPasswordEncoder();
     }
-
-
-// ... mevcut kodların ...
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Geliştirme aşamasında (Postman vb. testleri için) genellikle kapatılır
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/events/**").permitAll() // Etkinlikleri herkes görebilmeli
-                .requestMatchers("/api/auth/**").permitAll()   // Kayıt ve Giriş sayfaları herkese açık
-                .anyRequest().authenticated()                  // Geri kalan her işlem (Bilet alımı vb.) için giriş şart
+                .requestMatchers(
+                    "/login",
+                    "/register",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/static/**",
+                    "/api/auth/**",
+                    "/api/events/**"
+                ).permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") // Nestan'ın hazırlayacağı giriş sayfası
+                .loginPage("/login")
+                .defaultSuccessUrl("/events", true)
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .permitAll()
             );
 
