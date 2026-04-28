@@ -12,20 +12,21 @@ public class TicketType {
     private Long id;
 
     @Column(nullable = false)
-    private String name; 
+    private String name;
 
     @Column(nullable = false)
-    private BigDecimal price; 
+    private BigDecimal price;
 
     @Column(nullable = false)
-    private Integer quota; 
+    private Integer quota;
 
     
+    private Integer soldCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
@@ -34,6 +35,8 @@ public class TicketType {
     public void setPrice(BigDecimal price) { this.price = price; }
     public Integer getQuota() { return quota; }
     public void setQuota(Integer quota) { this.quota = quota; }
+    public Integer getSoldCount() { return soldCount; }
+    public void setSoldCount(Integer soldCount) { this.soldCount = soldCount; }
     public Event getEvent() { return event; }
     public void setEvent(Event event) { this.event = event; }
 }

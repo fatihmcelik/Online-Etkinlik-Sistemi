@@ -19,7 +19,7 @@ public class Location {
     private String city;
     private Integer capacity;
 
-    // Getter ve Setter
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
