@@ -2,12 +2,14 @@ package com.etkinlik.online_etkinlik.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity 
 public class SecurityConfig {
 
     @Bean
@@ -30,6 +32,7 @@ public class SecurityConfig {
                     "/api/auth/**",
                     "/api/events/**"
                 ).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN") 
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -40,6 +43,10 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/login")
                 .permitAll()
+            )
+            .rememberMe(remember -> remember
+                .key("cokGizliBirAnahtarOnlineEtkinlik")
+                .tokenValiditySeconds(7 * 24 * 60 * 60)
             );
 
         return http.build();

@@ -8,6 +8,8 @@ import com.etkinlik.online_etkinlik.repository.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.UUID;
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -18,30 +20,33 @@ public class TicketService {
     @Autowired
     private TicketTypeRepository ticketTypeRepository;
 
-    /**
-     * Kullanıcı için bilet üretir ve bilet türünün kotasını düşürür.
-     */
     @Transactional
     public Ticket buyTicket(User user, Long ticketTypeId) {
-        // 1. İlgili Bilet Türünü Bul (VIP mi, Standart mı?)
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId)
                 .orElseThrow(() -> new RuntimeException("Bilet türü bulunamadı!"));
 
-        // 2. Kapasite Kontrolü Yap (Kapasite Düşme Mantığı)
         if (ticketType.getQuota() <= 0) {
             throw new RuntimeException("Üzgünüz, bu bilet türü için kapasite dolmuştur.");
         }
 
-        // 3. Kapasiteyi Bir Azalt ve Güncelle
         ticketType.setQuota(ticketType.getQuota() - 1);
+        
+        
+        ticketType.setSoldCount(ticketType.getSoldCount() + 1); 
+        
         ticketTypeRepository.save(ticketType);
 
-        // 4. Yeni Bilet Oluştur ve Kaydet
         Ticket ticket = new Ticket();
         ticket.setUser(user);
         ticket.setTicketType(ticketType);
-        ticket.setStatus("ACTIVE"); // Başlangıç durumu
+        ticket.setEvent(ticketType.getEvent());
+        ticket.setTicketCode("ETK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        ticket.setStatus("ACTIVE"); 
 
         return ticketRepository.save(ticket);
+    }
+
+    public List<Ticket> getUserTickets(Long userId) {
+        return ticketRepository.findByUserId(userId);
     }
 }

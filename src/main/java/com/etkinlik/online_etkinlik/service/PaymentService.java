@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 
 import com.etkinlik.online_etkinlik.model.User;
+import com.etkinlik.online_etkinlik.model.Ticket;
+import com.etkinlik.online_etkinlik.repository.PaymentRepository;
 
 @Service
 public class PaymentService {
@@ -36,18 +38,32 @@ public class PaymentService {
     @Autowired
     private TicketService ticketService;
 
-    public String processPayment(User user, Long ticketTypeId, CreatePaymentRequest request) {
-        // 1. Iyzico'ya ödeme isteğini gönder
-        Payment payment = Payment.create(request, options);
+    @Autowired
+    private PaymentRepository paymentRepository;
 
-        // 2. Arka Plan Bağlantı Kontrolü
-        if (payment.getStatus().equals(Status.SUCCESS.getValue())) {
-            // Ödeme başarılıysa 4. haftada yazdığın bilet üretimini tetikle
-            ticketService.buyTicket(user, ticketTypeId);
+    public String processPayment(User user, Long ticketTypeId, CreatePaymentRequest request) {
+        Payment iyzicoPayment = Payment.create(request, options);
+
+        if (iyzicoPayment.getStatus().equals(Status.SUCCESS.getValue())) {
+            
+            
+            Ticket generatedTicket = ticketService.buyTicket(user, ticketTypeId);
+            
+            
+            com.etkinlik.online_etkinlik.model.Payment myPayment = new com.etkinlik.online_etkinlik.model.Payment();
+            myPayment.setAmount(request.getPrice());
+            myPayment.setIyzicoPaymentId(iyzicoPayment.getPaymentId());
+            myPayment.setStatus("BASARILI");
+            myPayment.setUser(user);
+            
+            
+            myPayment.setTicket(generatedTicket);
+            
+            paymentRepository.save(myPayment);
+
             return "Ödeme başarılı, biletiniz oluşturuldu.";
         } else {
-            // Ödeme başarısızsa hata mesajını dön
-            return "Ödeme hatası: " + payment.getErrorMessage();
+            return "Ödeme hatası: " + iyzicoPayment.getErrorMessage();
         }
     }
 }
