@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Biletlerim - Online Etkinlik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <a href="main.html" style="text-decoration: none;"><span class="nav-item active">ANA SAYFA</span></a>
+        <span class="nav-item">KONSER</span>
+        <span class="nav-item">TİYATRO</span>
+    </div>
+
+    <div class="user-menu-wrapper">
+        <div class="account-capsule" onclick="toggleMenu()">
+            <div class="account-circle">NÇ</div>
+            <span class="account-text">Hesabım</span>
+            <span class="account-arrow">⌵</span>
+        </div>
+        <div id="dropdownMenu" class="dropdown-content">
+            <a href="#"><span class="menu-icon">👤</span> Profilim</a>
+            <a href="tickets.html"><span class="menu-icon">🎟</span> Biletlerim</a>
+            <hr>
+            <a href="login.html" class="logout-link"><span class="menu-icon">↪</span> Çıkış Yap</a>
+        </div>
+    </div>
+</header>
+
+<div class="layout">
+    <main class="main">
+        <h2 style="margin-bottom: 25px; font-weight: 800;">Biletlerim</h2>
+
+        <div class="ticket-list">
+            <!-- Örnek Bilet 1 -->
+            <div class="ticket-card">
+                <div class="ticket-img img1"></div>
+                <div class="ticket-details">
+                    <div class="ticket-info">
+                        <h3>Tiesto - İstanbul Festivali</h3>
+                        <p>Festival Park Yenikapı</p>
+                        <span>08 Ağustos Cts 21:30</span>
+                    </div>
+                    <div class="ticket-action">
+                        <div class="ticket-id">Pnr: #ETK-12345</div>
+                        <button class="login-btn" style="padding: 8px 15px; font-size: 14px;">Bileti Görüntüle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Örnek Bilet 2 -->
+            <div class="ticket-card">
+                <div class="ticket-img img2"></div>
+                <div class="ticket-details">
+                    <div class="ticket-info">
+                        <h3>Yalın “Bir Büyülü Gece”</h3>
+                        <p>Volkswagen Arena</p>
+                        <span>22 Mayıs Cuma 20:00</span>
+                    </div>
+                    <div class="ticket-action">
+                        <div class="ticket-id">Pnr: #ETK-98765</div>
+                        <button class="login-btn" style="padding: 8px 15px; font-size: 14px;">Bileti Görüntüle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdownMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+</script>
+
+</body>
+</html>

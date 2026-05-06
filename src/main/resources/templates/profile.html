@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Profilim - Online Etkinlik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="bg-light">
+
+<header class="navbar">
+    <div class="nav-container">
+        <a href="main.html" style="text-decoration: none;"><span class="nav-item active">ANA SAYFA</span></a>
+        <span class="nav-item">KONSER</span>
+        <span class="nav-item">TİYATRO</span>
+        <span class="nav-item">FESTİVAL</span>
+        <span class="nav-item">ELEKTRONİK MÜZİK</span>
+        <span class="nav-item">STAND UP</span>
+        <span class="nav-item">ÇOCUK AKTİVİTELERİ</span>
+        <span class="nav-item">WORKSHOP</span>
+        <span class="nav-item">BLOG</span>
+    </div>
+
+    <div class="user-menu-wrapper">
+        <div class="account-capsule" onclick="toggleMenu()">
+            <div class="account-circle">NÇ</div>
+            <span class="account-text">Hesabım</span>
+            <span class="account-arrow">⌵</span>
+        </div>
+        <div id="dropdownMenu" class="dropdown-content">
+            <a href="profile.html"><span class="menu-icon">👤</span> Profilim</a>
+            <a href="tickets.html"><span class="menu-icon">🎟</span> Biletlerim</a>
+            <hr>
+            <a href="login.html" class="logout-link"><span class="menu-icon">↪</span> Çıkış Yap</a>
+        </div>
+    </div>
+</header>
+
+<div class="layout">
+    <main class="main">
+        <h2 style="margin-bottom: 25px; font-weight: 800;">Profil Bilgilerim</h2>
+
+        <div class="card shadow-sm border-0" style="border-radius: 15px; background: white;">
+            <div class="card-body p-5">
+                <div class="row d-flex align-items-start" style="display: flex; gap: 40px;">
+                    
+                    <div class="profile-avatar-section" style="text-align: center;">
+                        <div class="account-circle" style="width: 120px; height: 120px; font-size: 40px; margin: 0 auto 15px; background-color: #28ca6d;">NÇ</div>
+                        <button class="register-link" style="border: none; cursor: pointer; background: none;">Fotoğrafı Değiştir</button>
+                    </div>
+
+                    <div class="profile-form-section" style="flex: 1;">
+                        <form action="#">
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 600; display: block; margin-bottom: 8px;">Ad Soyad</label>
+                                <input type="text" class="custom-input" value="Nestan Çetin" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-label" style="font-weight: 600; display: block; margin-bottom: 8px;">E-posta Adresi</label>
+                                <input type="email" class="custom-input" value="cetinnestan@gmail.com" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 25px;">
+                                <label class="form-label" style="font-weight: 600; display: block; margin-bottom: 8px;">Şifre</label>
+                                <input type="password" class="custom-input" value="********" style="width: 100%;">
+                            </div>
+                            <button type="submit" class="login-btn" style="width: auto; padding: 12px 30px;">Bilgileri Güncelle</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdownMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+</script>
+
+</body>
+</html>
