@@ -12,10 +12,10 @@ public class AuthController {
         return "login"; // login.html'i göster
     }
 
-    @GetMapping("/register")
+ /*   @GetMapping("/register")
     public String registerPage() {
         return "register"; // register.html'i göster
-    }
+    } */
 
     @GetMapping("/")
     public String homePage() {
