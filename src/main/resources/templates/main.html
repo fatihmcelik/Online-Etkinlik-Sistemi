@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Etkinlikler - Online Etkinlik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <span class="nav-item active">KONSER</span>
+        <span class="nav-item">TİYATRO</span>
+        <span class="nav-item">FESTİVAL</span>
+        <span class="nav-item">ELEKTRONİK MÜZİK</span>
+        <span class="nav-item">STAND UP</span>
+        <span class="nav-item">ÇOCUK AKTİVİTELERİ</span>
+        <span class="nav-item">WORKSHOP</span>
+        <span class="nav-item">BLOG</span>
+    </div>
+
+    <div class="user-menu-container">
+    <div class="account-capsule" onclick="toggleMenu()">
+        <div class="account-circle">NÇ</div>
+        <span class="account-text">Hesabım</span>
+        <span id="menu-arrow" class="account-arrow">⌵</span>
+    </div>
+    
+    <div id="dropdownMenu" class="dropdown-content">
+        <a href="profile.html"><span class="menu-icon">👤</span> Profilim</a>
+        <a href="tickets.html"><span class="menu-icon">🎟</span> Biletlerim</a>
+        <a href="#"><span class="menu-icon">❤️</span> Favorilerim</a>
+        <a href="#"><span class="menu-icon">⭐</span> Değerlendirmelerim</a>
+        <hr>
+        <a href="#"><span class="menu-icon">⚙️</span> Ayarlar</a>
+        <a href="#"><span class="menu-icon">🎧</span> Destek</a>
+        <hr>
+        <a href="login.html" class="logout-link"><span class="menu-icon">↪</span> Çıkış Yap</a>
+    </div>
+</div>
+</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="filter">Tarih</div>
+        <div class="filter">Fiyat Aralığı</div>
+        <div class="filter">Mekan</div>
+        <div class="filter">Diğer Filtreler</div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="sort">↕ Öne Çıkanlar</div>
+            <div class="view">
+                <div class="icon active"></div>
+                <div class="icon"></div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="img img1"></div>
+                <div class="card-body">
+                    <h3>Tiesto - İstanbul Festivali</h3>
+                    <p>Festival Park Yenikapı</p>
+                    <span>08 Ağustos Cts 21:30</span>
+                    <div class="price">2000₺</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img img2"></div>
+                <div class="card-body">
+                    <h3>Yalın “Bir Büyülü Gece”</h3>
+                    <p>Volkswagen Arena</p>
+                    <span>22 Mayıs, 24 Mayıs</span>
+                    <div class="price">2100₺</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img img3"></div>
+                <div class="card-body">
+                    <h3>Fazıl Say Jazz Quintet</h3>
+                    <p>Harbiye Açıkhava</p>
+                    <span>02 Eylül, 03 Eylül</span>
+                    <div class="status">● Yakında Satışta</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img img4"></div>
+                <div class="card-body">
+                    <h3>K-POP İstanbul Festivali</h3>
+                    <p>Festival Park Yenikapı</p>
+                    <span>14 Ağustos, 15 Ağustos</span>
+                    <div class="price">2000₺</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdownMenu");
+        if (menu.style.display === "block") {
+            menu.style.display = "none";
+        } else {
+            menu.style.display = "block";
+        }
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.user-menu-container')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                dropdowns[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

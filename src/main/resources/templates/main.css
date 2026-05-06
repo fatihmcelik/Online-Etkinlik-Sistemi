@@ -1,0 +1,336 @@
+/* GENEL AYARLAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif, Arial;
+}
+
+body {
+    background: #f7f7f7;
+    color: #333;
+}
+
+/* NAVBAR (Üst Menü) */
+.navbar {
+    background: #fff;
+    padding: 10px 40px;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-item {
+    color: #439a5d;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-item.active {
+    border: 2px solid #439a5d;
+    border-radius: 25px;
+}
+
+/* HESABIM BUTONU (YEŞİL KAPSÜL) */
+.user-menu-wrapper {
+    position: relative;
+}
+
+.account-capsule {
+    background-color: #28ca6d;
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 30px;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+}
+
+.account-capsule:hover {
+    background-color: #21a85b;
+}
+
+.account-circle {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.account-text {
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.account-arrow {
+    color: white;
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+/* AÇILIR MENÜ (DROPDOWN) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #fff;
+    min-width: 220px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    z-index: 2000;
+    border: 1px solid #eee;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: #444;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f8f8f8;
+    color: #28ca6d;
+}
+
+.menu-icon {
+    margin-right: 12px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.dropdown-content hr {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.logout-link {
+    color: #d9534f !important;
+}
+
+/* GİRİŞ & KAYIT SAYFALARI ÖZEL (LOGIN/REGISTER) */
+.login-body {
+    background-color: #f7f7f7;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+}
+
+.login-title {
+    font-weight: 800;
+    color: #333;
+}
+
+.custom-input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #439a5d;
+    box-shadow: 0 0 0 0.2rem rgba(67, 154, 93, 0.25);
+}
+
+.login-btn {
+    background-color: #439a5d;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #367c4a;
+    color: white;
+}
+
+/* ETKİNLİK SAYFASI LAYOUT (MAIN.HTML) */
+.layout {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 25px 40px;
+    gap: 25px;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.filter {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.filter::after {
+    content: '⌵';
+    color: #bbb;
+}
+
+.main {
+    flex: 1;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.img {
+    height: 180px;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-body h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.price {
+    margin-top: 10px;
+    color: #439a5d;
+    font-weight: 800;
+    font-size: 17px;
+}
+
+.status {
+    margin-top: 12px;
+    color: #439a5d;
+    font-weight: 700;
+    font-size: 13px;
+}
+/* BİLETLERİM SAYFASI ÖZEL */
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ticket-card {
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #eee;
+    transition: box-shadow 0.3s ease;
+}
+
+.ticket-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.ticket-img {
+    width: 150px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.ticket-details {
+    flex: 1;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-info h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.ticket-info p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.ticket-info span {
+    font-size: 12px;
+    color: #439a5d;
+    font-weight: 600;
+}
+
+.ticket-action {
+    text-align: right;
+}
+
+.ticket-id {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 8px;
+    font-family: monospace;
+}

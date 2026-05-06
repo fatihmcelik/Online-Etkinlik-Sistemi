@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Yap - Online Etkinlik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="login-body">
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card login-card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4 login-title">Giriş Yap</h2>
+                
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3 p-2 bg-light rounded shadow-sm border">
+        <small class="text-muted d-block mb-2">Giriş Yetkisi:</small>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="roleUser" value="USER" checked>
+            <label class="form-check-label" for="roleUser">Kullanıcı</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="roleAdmin" value="ADMIN">
+            <label class="form-check-label" for="roleAdmin">Yönetici</label>
+        </div>
+    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kullanıcı Adı</label>
+                        <input type="text" name="username" class="form-control custom-input" placeholder="Kullanıcı adınız" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Şifre</label>
+                        <input type="password" name="password" class="form-control custom-input" placeholder="••••••••" required>
+                    </div>
+                    
+                    <button type="button" class="btn login-btn w-100" onclick="window.location.href='main.html'">Giriş Yap</button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="register-text">
+                        Hesabın yok mu? <a href="register.html" class="register-link">Kayıt Ol</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
