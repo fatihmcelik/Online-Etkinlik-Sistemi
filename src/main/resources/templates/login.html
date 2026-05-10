@@ -1,49 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Giriş Yap - Online Etkinlik</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giriş Yap - Eventia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg-base: #f4f6f8; 
+            --bg-card: #ffffff; 
+            --accent: #ed1c24; 
+            --accent-hover: #c9141b;
+            --text-main: #212529; 
+            --text-sec: #6c757d; 
+            --border-color: #e5e5e5;
+        }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        .card-custom { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 420px; padding: 3rem 2.5rem; }
+        .logo-text { color: var(--accent); font-weight: 800; font-size: 2.2rem; text-align: center; margin-bottom: 2rem; letter-spacing: -1px; }
+        
+        .form-control { background-color: #f8f9fa; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.8rem 1rem; border-radius: 8px; }
+        .form-control:focus { background-color: #ffffff; color: var(--text-main); border-color: var(--accent); box-shadow: 0 0 0 0.25rem rgba(237, 28, 36, 0.15); }
+        
+        .btn-custom { background-color: var(--accent); color: #ffffff; font-weight: 700; border: none; padding: 0.85rem; border-radius: 8px; transition: all 0.3s ease; font-size: 1.05rem; }
+        .btn-custom:hover { background-color: var(--accent-hover); color: #ffffff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(237, 28, 36, 0.2); }
+        
+        .text-secondary-custom { color: var(--text-sec) !important; font-weight: 500; }
+        a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        a:hover { color: var(--accent-hover); text-decoration: underline; }
+        
+        .form-check-input { border-color: #ced4da; }
+        .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+    </style>
 </head>
-<body class="login-body">
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card login-card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h2 class="text-center mb-4 login-title">Giriş Yap</h2>
-                
-                <form th:action="@{/login}" method="post">
-                    <div class="mb-3 p-2 bg-light rounded shadow-sm border">
-        <small class="text-muted d-block mb-2">Giriş Yetkisi:</small>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="role" id="roleUser" value="USER" checked>
-            <label class="form-check-label" for="roleUser">Kullanıcı</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="role" id="roleAdmin" value="ADMIN">
-            <label class="form-check-label" for="roleAdmin">Yönetici</label>
-        </div>
-    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kullanıcı Adı</label>
-                        <input type="text" name="username" class="form-control custom-input" placeholder="Kullanıcı adınız" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Şifre</label>
-                        <input type="password" name="password" class="form-control custom-input" placeholder="••••••••" required>
-                    </div>
-                    
-                    <button type="button" class="btn login-btn w-100" onclick="window.location.href='main.html'">Giriş Yap</button>
-                </form>
+<body>
 
-                <div class="text-center mt-4">
-                    <p class="register-text">
-                        Hesabın yok mu? <a href="register.html" class="register-link">Kayıt Ol</a>
-                    </p>
+<div class="container d-flex justify-content-center">
+    <div class="card-custom">
+        <div class="logo-text">Eventia</div>
+
+        <div th:if="${param.error}" class="alert alert-danger text-center border-0 shadow-sm" style="background-color: #fff0f1; color: #ed1c24; border-radius: 8px;" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i>Kullanıcı adı veya şifre hatalı!
+        </div>
+        <div th:if="${param.success}" class="alert alert-success text-center border-0 shadow-sm" style="background-color: #f0fdf4; color: #198754; border-radius: 8px;" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i>İşlem başarılı, giriş yapabilirsiniz.
+        </div>
+
+        <form th:action="@{/login}" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label text-secondary-custom small mb-1">Kullanıcı Adı</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-secondary"><i class="fa-regular fa-user"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="username" name="username" required placeholder="kullaniciadiniz">
                 </div>
             </div>
-        </div>
+            <div class="mb-4">
+                <label for="password" class="form-label text-secondary-custom small mb-1">Şifre</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-secondary"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" class="form-control border-start-0 ps-0" id="password" name="password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember-me" name="remember-me">
+                    <label class="form-check-label text-secondary-custom" for="remember-me" style="font-size: 0.85rem;">
+                        Beni Hatırla
+                    </label>
+                </div>
+                <a th:href="@{/forgot-password}" style="font-size: 0.85rem;">Şifremi Unuttum</a>
+            </div>
+
+            <button type="submit" class="btn btn-custom w-100 mb-4">Giriş Yap</button>
+
+            <div class="text-center text-secondary-custom" style="font-size: 0.95rem;">
+                Hesabın yok mu? <a th:href="@{/register}">Hemen Kayıt Ol</a>
+            </div>
+        </form>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

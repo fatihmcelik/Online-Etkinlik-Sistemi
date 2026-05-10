@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mekan Yönetimi - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg-base: #f4f6f8; --bg-card: #ffffff; --accent: #ed1c24; --text-main: #2b2b2b; --text-sec: #6c757d; --border-color: #e5e5e5; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .sidebar { background-color: var(--bg-card); min-height: 100vh; border-right: 1px solid var(--border-color); padding-top: 2rem; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .sidebar-brand { color: var(--accent); font-weight: 800; font-size: 1.5rem; text-align: center; display: block; padding: 1rem; margin-bottom: 1rem; text-decoration: none; letter-spacing: -1px;}
+        .sidebar-link { color: var(--text-sec); text-decoration: none; padding: 0.85rem 1.5rem; display: block; font-weight: 600; transition: 0.3s; border-left: 4px solid transparent; }
+        .sidebar-link:hover, .sidebar-link.active { color: var(--accent); background-color: #fff0f1; border-left: 4px solid var(--accent); }
+        .sidebar-link.danger { color: #dc3545; }
+        
+        .content { padding: 2.5rem; }
+        .content-box { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .form-control { background-color: #f8f9fa; border: 1px solid var(--border-color); }
+        .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 0.25rem rgba(237,28,36,0.15); background-color: #fff; }
+        .btn-custom { background-color: var(--accent); color: white; font-weight: bold; }
+        .btn-custom:hover { background-color: #c9141b; color: white; }
+        
+        .table thead th { background-color: #f8f9fa; color: var(--text-sec); font-weight: 600; border-bottom: 2px solid var(--border-color); padding: 1rem; }
+        .table tbody td { padding: 1rem; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+<div class="row g-0">
+    <div class="col-md-2 sidebar">
+        <a class="sidebar-brand" th:href="@{/admin/dashboard}">Eventia</a>
+        <div class="px-3 mb-2 small fw-bold text-uppercase text-muted">Yönetim</div>
+        <a th:href="@{/admin/dashboard}" class="sidebar-link"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a>
+        <a th:href="@{/admin/categories}" class="sidebar-link"><i class="fa-solid fa-tags me-2"></i>Kategoriler</a>
+        <a th:href="@{/admin/locations}" class="sidebar-link active"><i class="fa-solid fa-location-dot me-2"></i>Mekanlar</a>
+        <hr style="border-color: var(--border-color); margin: 1.5rem 1rem;">
+        <a th:href="@{/events}" class="sidebar-link"><i class="fa-solid fa-globe me-2"></i>Siteye Dön</a>
+    </div>
+
+    <div class="col-md-10 content">
+        <h2 class="fw-bold mb-4 text-dark">Mekan Yönetimi</h2>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="content-box">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Yeni Mekan Ekle</h5>
+                    <form th:action="@{/admin/location/save}" method="POST" th:object="${location}">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Mekan Adı</label>
+                            <input type="text" th:field="*{name}" class="form-control" required placeholder="Örn: Harbiye Açıkhava">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Şehir</label>
+                            <input type="text" th:field="*{city}" class="form-control" required placeholder="Örn: İstanbul">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Kapasite</label>
+                            <input type="number" th:field="*{capacity}" class="form-control" required placeholder="Örn: 2000">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Açık Adres</label>
+                            <textarea th:field="*{address}" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-custom w-100"><i class="fa-solid fa-plus me-1"></i> Kaydet</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="content-box p-0 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mekan Adı</th>
+                                    <th>Şehir</th>
+                                    <th>Kapasite</th>
+                                    <th class="text-end">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="loc : ${locations}">
+                                    <td class="fw-bold text-dark" th:text="${loc.name}">Ad</td>
+                                    <td class="text-secondary" th:text="${loc.city}">Şehir</td>
+                                    <td><span class="badge bg-light text-dark border" th:text="${loc.capacity + ' Kişi'}">0</span></td>
+                                    <td class="text-end">
+                                        <form th:action="@{/admin/location/delete/{id}(id=${loc.id})}" method="post" onsubmit="return confirm('Bu mekanı silmek istediğinize emin misiniz?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold"><i class="fa-solid fa-trash"></i> Sil</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr th:if="${locations == null or locations.isEmpty()}">
+                                    <td colspan="4" class="text-center py-4 text-muted">Henüz mekan eklenmemiş.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

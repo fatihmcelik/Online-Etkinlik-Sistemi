@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bilet Tipleri Yönetimi - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg-base: #f4f6f8; --bg-card: #ffffff; --accent: #ed1c24; --text-main: #2b2b2b; --text-sec: #6c757d; --border-color: #e5e5e5; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', sans-serif; }
+        .content { padding: 3rem; }
+        .event-header { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .content-box { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .form-control { background-color: #f8f9fa; border: 1px solid var(--border-color); }
+        .btn-custom { background-color: var(--accent); color: white; font-weight: bold; }
+        .btn-custom:hover { background-color: #c9141b; color: white; }
+        .table thead th { background-color: #f8f9fa; color: var(--text-sec); font-weight: 600; padding: 1rem; border-bottom: 2px solid var(--border-color); }
+        .table tbody td { padding: 1rem; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+<div class="content container">
+    <div class="event-header shadow-sm">
+        <div>
+            <h4 class="fw-bold mb-1" th:text="${event.title}">Etkinlik Adı</h4>
+            <span class="badge bg-light text-dark border"><i class="fa-solid fa-calendar me-1 text-danger"></i> <span th:text="${#temporals.format(event.startDate, 'dd.MM.yyyy HH:mm')}">Tarih</span></span>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary fw-bold"><i class="fa-solid fa-arrow-left me-2"></i>Dashboard'a Dön</a>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger border-0 shadow-sm mb-4" th:text="${error}">Hata</div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="content-box">
+                <h5 class="fw-bold mb-3 border-bottom pb-2">Yeni Fiyat/Kategori Ekle</h5>
+                <form th:action="@{/admin/event/{eventId}/ticket-types/save(eventId=${event.id})}" method="POST" th:object="${newTicketType}">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Kategori Adı</label>
+                        <input type="text" th:field="*{name}" class="form-control" placeholder="Örn: VIP, Öğrenci, Genel" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Fiyat (TL)</label>
+                        <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="0.00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Kontenjan (Adet)</label>
+                        <input type="number" th:field="*{quota}" class="form-control" placeholder="Örn: 100" required>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100 mt-2"><i class="fa-solid fa-plus me-1"></i> Fiyat Tanımla</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="content-box p-0 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Kontenjan</th>
+                                <th>Satılan</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="type : ${ticketTypes}">
+                                <td class="fw-bold text-dark" th:text="${type.name}">VIP</td>
+                                <td class="text-danger fw-bold" th:text="${type.price + ' TL'}">0 TL</td>
+                                <td><span class="badge bg-light text-dark border" th:text="${type.quota}">100</span></td>
+                                <td><span class="badge bg-success" th:text="${type.soldCount}">0</span></td>
+                                <td class="text-end">
+                                    <form th:action="@{/admin/ticket-types/delete/{id}(id=${type.id})}" method="post">
+                                        <input type="hidden" name="eventId" th:value="${event.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold" 
+                                                onclick="return confirm('Bu bilet tipini silmek istediğinize emin misiniz?');">
+                                            <i class="fa-solid fa-trash"></i> Sil
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${ticketTypes == null or ticketTypes.isEmpty()}">
+                                <td colspan="5" class="text-center py-5 text-muted">Bu etkinlik için henüz fiyat tanımlanmamış.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

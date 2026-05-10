@@ -2,8 +2,15 @@ package com.etkinlik.online_etkinlik.controller;
 
 import com.etkinlik.online_etkinlik.model.User;
 import com.etkinlik.online_etkinlik.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +29,6 @@ public class AuthController {
         return "login"; 
     }
 
-    
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
@@ -30,7 +36,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, Model model) {
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "register"; 
+        }
         try {
             userService.saveUser(user);
             return "redirect:/login?success";
@@ -42,6 +51,16 @@ public class AuthController {
 
     @GetMapping("/")
     public String homePage() {
+        return "redirect:/events";
+    }
+
+    // YENİ EKLENEN: Linke tıklandığında sorunsuz çıkış yapmayı sağlayan metot
+    @GetMapping("/logout")
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
         return "redirect:/login";
     }
 }

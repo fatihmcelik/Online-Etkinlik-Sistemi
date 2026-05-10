@@ -1,51 +1,176 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
 <head>
-    <title>Etkinlik Detayı</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${event.title} + ' - Eventia'">Etkinlik Detay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .event-header { background: #f8f9fa; padding: 40px 0; border-bottom: 1px solid #dee2e6; }
-        .speaker-card { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        :root { --bg-base: #f4f6f8; --bg-card: #ffffff; --accent: #ed1c24; --accent-hover: #c9141b; --text-main: #212529; --text-sec: #6c757d; --border-color: #e5e5e5; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', sans-serif; padding-top: 70px; }
+        .navbar { background-color: #ffffff; box-shadow: 0 2px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color); }
+        .navbar-brand { color: var(--accent) !important; font-weight: 800; font-size: 1.8rem; letter-spacing: -1px; }
+        .hero-section { height: 45vh; min-height: 350px; background-size: cover; background-position: center; position: relative; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%); display: flex; align-items: flex-end; padding-bottom: 2rem; }
+        .content-box { background-color: var(--bg-card); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 2rem; }
+        .info-card { position: sticky; top: 100px; border-top: 4px solid var(--accent); }
+        .btn-custom { background-color: var(--accent); color: #ffffff; font-weight: 700; padding: 1rem; border-radius: 8px; border: none; transition: 0.3s; font-size: 1.1rem; }
+        .btn-custom:hover { background-color: var(--accent-hover); transform: scale(1.02); color: #ffffff; }
+        .btn-favorite { color: var(--accent); border: 2px solid var(--accent); font-weight: 700; padding: 0.8rem; border-radius: 8px; transition: 0.3s; background: transparent; width: 100%; margin-bottom: 1rem; }
+        .btn-favorite:hover, .btn-favorite.active { background-color: var(--accent); color: white; }
+        .speaker-card { background-color: #f8f9fa; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .speaker-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .detail-icon { color: var(--accent); width: 30px; text-align: center; font-size: 1.3rem; }
+        .review-card { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+        .review-card:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .star-rating i { color: #ffc107; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-<div class="container mt-5">
-    <div class="event-header text-center">
-        <h1 th:text="${event.title}">Etkinlik Başlığı</h1>
-        <span class="badge bg-primary" th:text="${event.category.name}">Kategori</span>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/events}">Eventia</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link text-dark fw-bold" th:href="@{/events}"><i class="fa-solid fa-arrow-left me-2"></i>Geri Dön</a></li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <div class="row mt-4">
-        <div class="col-md-8">
-            <h3>Etkinlik Hakkında</h3>
-            <p th:text="${event.description}">Burada etkinlik açıklaması yer alacak.</p>
-            
-            <hr>
-            
-            <h4>Konuşmacılar</h4>
-            <div th:each="speaker : ${event.speakers}" class="speaker-card">
-                <strong th:text="${speaker.firstName + ' ' + speaker.lastName}">Ad Soyad</strong>
-                <p class="small text-muted" th:text="${speaker.bio}">Kısa biyografi...</p>
+<div class="hero-section" th:style="'background-image: url(' + (${event.imageUrl != null ? event.imageUrl : 'https://via.placeholder.com/1200x500/e5e5e5/ed1c24?text=Etkinlik'}) + ');'">
+    <div class="hero-overlay">
+        <div class="container">
+            <span class="badge bg-danger mb-3 px-3 py-2 fs-6 fw-bold shadow" th:text="${event.category.name}">Kategori</span>
+            <h1 class="display-4 fw-bold text-white mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);" th:text="${event.title}">Etkinlik Başlığı</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    
+    <div th:if="${success}" class="alert alert-success border-0 shadow-sm fw-bold mb-4"><i class="fa-solid fa-check-circle me-2"></i><span th:text="${success}"></span></div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="content-box">
+                <h4 class="fw-bold mb-4 pb-2 border-bottom">Etkinlik Hakkında</h4>
+                <p style="font-size: 1.05rem; line-height: 1.8; color: #4a4a4a;" th:text="${event.description}">Açıklama</p>
+
+                <div th:if="${event.speakers != null and !event.speakers.isEmpty()}" class="mt-5">
+                    <h4 class="fw-bold mb-4 pb-2 border-bottom">Kadro</h4>
+                    <div class="row">
+                        <div class="col-md-6" th:each="speaker : ${event.speakers}">
+                            <div class="speaker-card">
+                                <img th:src="${speaker.photoUrl != null ? speaker.photoUrl : 'https://via.placeholder.com/60/cccccc/ffffff?text=U'}" class="speaker-img">
+                                <div>
+                                    <h6 class="mb-1 fw-bold text-dark" th:text="${speaker.firstName + ' ' + speaker.lastName}">İsim</h6>
+                                    <div class="text-danger small mb-1 fw-semibold" th:text="${speaker.title}">Unvan</div>
+                                    <div class="text-secondary small" th:text="${speaker.bio}">Bio</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-box mt-4">
+                <h4 class="fw-bold mb-4 pb-2 border-bottom">Değerlendirmeler</h4>
+                
+                <form th:action="@{/events/{id}/review(id=${event.id})}" method="POST" class="mb-5 bg-light p-4 rounded border">
+                    <h6 class="fw-bold mb-3">Sen de Puan Ver</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-secondary">Puanın (1-5)</label>
+                            <select name="rating" class="form-select fw-bold" required>
+                                <option value="5">⭐⭐⭐⭐⭐ (5 Mükemmel)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 İyi)</option>
+                                <option value="3">⭐⭐⭐ (3 İdare Eder)</option>
+                                <option value="2">⭐⭐ (2 Kötü)</option>
+                                <option value="1">⭐ (1 Çok Kötü)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label small fw-bold text-secondary">Yorumun</label>
+                            <input type="text" name="comment" class="form-control" placeholder="Etkinlik hakkında ne düşünüyorsun?" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-sm btn-dark fw-bold px-4 py-2">Yorum Gönder</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="review-list">
+                    <div th:each="review : ${reviews}" class="review-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold m-0"><i class="fa-regular fa-user-circle me-2 text-secondary"></i><span th:text="${review.user.firstName + ' ' + review.user.lastName}">Kullanıcı</span></h6>
+                            <small class="text-secondary" th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}">Tarih</small>
+                        </div>
+                        <div class="star-rating mb-2">
+                            <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, review.rating)}"></i>
+                            <i class="fa-regular fa-star" th:if="${review.rating < 5}" th:each="i : ${#numbers.sequence(review.rating + 1, 5)}"></i>
+                        </div>
+                        <p class="text-secondary mb-0" th:text="${review.comment}">Yorum detayı...</p>
+                    </div>
+                    <div th:if="${reviews == null or reviews.isEmpty()}" class="text-center py-4 text-muted">
+                        Bu etkinlik için henüz değerlendirme yapılmamış. İlk yorumu sen yap!
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <div class="col-lg-4">
+            <div class="content-box info-card">
+                
+                <form th:action="@{/events/{id}/favorite(id=${event.id})}" method="POST">
+                    <button type="submit" class="btn-favorite" th:classappend="${isFavorite ? 'active' : ''}">
+                        <i class="fa-heart me-1" th:classappend="${isFavorite ? 'fa-solid' : 'fa-regular'}"></i> 
+                        <span th:text="${isFavorite ? 'Favorilerden Çıkar' : 'Favorilere Ekle'}">Favorilere Ekle</span>
+                    </button>
+                </form>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>Bilgiler</h5>
-                    <p><strong>📍 Mekan:</strong> <span th:text="${event.location.name}">Mekan Adı</span></p>
-                    <p><strong>📅 Tarih:</strong> <span th:text="${#temporals.format(event.startDate, 'dd MMMM yyyy HH:mm')}">01 Ocak 2026</span></p>
-                    <p><strong>👥 Kapasite:</strong> <span th:text="${event.location.capacity}">100</span> Kişi</p>
-                    
-                    <hr>
-                    
-                    <a th:href="@{/checkout(eventId=${event.id})}" class="btn btn-success w-100">Bilet Al / Kayıt Ol</a>
+                <h4 class="fw-bold mb-4">Bilet Al</h4>
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="me-3 detail-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div>
+                        <div class="text-secondary small fw-semibold">Mekan</div>
+                        <div class="fw-bold text-dark" th:text="${event.location.name}">Mekan Adı</div>
+                        <div class="text-secondary small" th:text="${event.location.city}">Şehir</div>
+                    </div>
                 </div>
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="me-3 detail-icon"><i class="fa-regular fa-calendar"></i></div>
+                    <div>
+                        <div class="text-secondary small fw-semibold">Tarih</div>
+                        <div class="fw-bold text-dark" th:text="${#temporals.format(event.startDate, 'dd MMMM yyyy')}">Tarih</div>
+                        <div class="text-danger small fw-bold" th:text="${#temporals.format(event.startDate, 'HH:mm')}">Saat</div>
+                    </div>
+                </div>
+
+                <div class="mt-4 mb-3 p-3 bg-light rounded border">
+                    <h6 class="fw-bold mb-3 border-bottom pb-2">Bilet Fiyatları</h6>
+                    <div th:each="ticketType : ${event.ticketTypes}" class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 0.95rem;" th:text="${ticketType.name}">Kategori</div>
+                            <small th:classappend="${ticketType.quota > 0 ? 'text-secondary' : 'text-danger fw-bold'}" 
+                                   th:text="${ticketType.quota > 0 ? 'Kalan Kota: ' + ticketType.quota : 'Tükendi'}">Kota</small>
+                        </div>
+                        <div class="fw-bold" th:classappend="${ticketType.quota > 0 ? 'text-danger' : 'text-muted text-decoration-line-through'}" 
+                             th:text="${ticketType.price + ' TL'}">Fiyat</div>
+                    </div>
+                    <div th:if="${event.ticketTypes == null or event.ticketTypes.isEmpty()}" class="text-muted small">
+                        Henüz bilet satışı başlamadı.
+                    </div>
+                </div>
+
+                <a th:href="@{/checkout(eventId=${event.id})}" class="btn btn-custom w-100 shadow-sm mt-3"><i class="fa-solid fa-ticket me-2"></i>Hemen Bilet Al</a>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,127 +1,239 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Etkinlikler - Online Etkinlik</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Etkinlikler - Eventia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg-base: #f4f6f8; 
+            --bg-card: #ffffff; 
+            --accent: #ed1c24; 
+            --accent-hover: #c9141b;
+            --text-main: #212529; 
+            --text-sec: #6c757d; 
+            --border-color: #e5e5e5;
+            --nav-dark: #1a1d20; 
+        }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', system-ui, sans-serif; padding-top: 85px; }
+        
+        .navbar { background-color: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color); transition: 0.3s; padding: 15px 0; }
+        .navbar-brand { color: var(--accent) !important; font-weight: 900; font-size: 1.8rem; letter-spacing: -1px; margin-right: 1.5rem; }
+        
+        .nav-btn { 
+            height: 40px; 
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 16px; margin: 4px;
+            background-color: var(--nav-dark); 
+            color: #ffffff !important; 
+            font-weight: 600; font-size: 0.9rem; 
+            border-radius: 8px; transition: all 0.2s ease-in-out; 
+            text-decoration: none; white-space: nowrap; 
+        }
+        .nav-btn i { margin-right: 6px; font-size: 1rem; color: rgba(255, 255, 255, 0.7); transition: 0.2s; }
+        .nav-btn:hover { background-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(237, 28, 36, 0.3); }
+        .nav-btn:hover i { color: #ffffff; }
+
+        .search-form { max-width: 320px; width: 100%; margin: 4px 10px; }
+        .search-form .form-control { 
+            height: 40px; border-radius: 8px 0 0 8px; border: 2px solid var(--nav-dark); 
+            border-right: none; padding-left: 1.2rem; background-color: #ffffff; font-weight: 500;
+        }
+        .search-form .form-control:focus { box-shadow: none; border-color: var(--accent); }
+        .search-form .btn { 
+            height: 40px; border-radius: 0 8px 8px 0; padding: 0 1.2rem; 
+            background-color: var(--nav-dark); color: #ffffff; border: 2px solid var(--nav-dark); transition: 0.2s;
+        }
+        .search-form .btn:hover { background-color: var(--accent); border-color: var(--accent); }
+
+        .dropdown-menu { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 0; margin-top: 10px !important; overflow: hidden; }
+        .dropdown-item { color: var(--text-main); font-weight: 600; padding: 12px 20px; transition: 0.2s; border-bottom: 1px solid #f8f9fa; }
+        .dropdown-item:hover { background-color: #fff0f1; color: var(--accent); padding-left: 25px; }
+
+        .hero-banner { margin-bottom: 30px; }
+        .hero-title { font-weight: 800; font-size: 2.8rem; letter-spacing: -1px; }
+
+        .filter-bar { background-color: var(--bg-card); border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 30px; }
+        .filter-bar .form-select, .filter-bar .form-control { border-radius: 8px; background-color: #f8f9fa; border: 1px solid var(--border-color); font-size: 0.9rem; font-weight: 500; }
+        .filter-bar .form-select:focus, .filter-bar .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 0.2rem rgba(237, 28, 36, 0.15); background-color: #ffffff; }
+
+        .event-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: all 0.3s ease; position: relative; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .event-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .event-card:hover .card-img-top { transform: scale(1.05); }
+        .card-img-wrapper { overflow: hidden; position: relative; padding-top: 133%; border-bottom: 1px solid var(--border-color); }
+        .card-img-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        
+        .badge-category { position: absolute; bottom: 10px; left: 10px; background-color: rgba(255,255,255,0.95); color: var(--text-main); font-weight: 700; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2; }
+        .badge-date { position: absolute; top: 10px; right: 10px; background-color: var(--accent); color: #ffffff; text-align: center; padding: 6px; border-radius: 8px; min-width: 45px; box-shadow: 0 4px 10px rgba(237, 28, 36, 0.4); z-index: 2; }
+        .badge-date .day { display: block; font-size: 1.1rem; font-weight: 800; line-height: 1; }
+        .badge-date .month { display: block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+
+        .card-body { padding: 12px 10px; }
+        .card-title { font-weight: 700; font-size: 0.95rem; color: var(--text-main); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
+        .card-location { color: var(--text-sec); font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-location i { color: var(--accent); margin-right: 4px; }
+    </style>
 </head>
 <body>
 
-<header class="navbar">
-    <div class="nav-container">
-        <span class="nav-item active">KONSER</span>
-        <span class="nav-item">TİYATRO</span>
-        <span class="nav-item">FESTİVAL</span>
-        <span class="nav-item">ELEKTRONİK MÜZİK</span>
-        <span class="nav-item">STAND UP</span>
-        <span class="nav-item">ÇOCUK AKTİVİTELERİ</span>
-        <span class="nav-item">WORKSHOP</span>
-        <span class="nav-item">BLOG</span>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" th:href="@{/events}">Eventia</a>
+        
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <i class="fa-solid fa-bars" style="color: var(--text-main);"></i>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto align-items-lg-center flex-wrap">
+                <li class="nav-item">
+                    <a class="nav-btn" th:href="@{/events}"><i class="fa-solid fa-layer-group"></i> Tüm Etkinlikler</a>
+                </li>
+                <li class="nav-item" th:each="cat : ${categories}">
+                    <a class="nav-btn" th:href="@{/events(categoryId=${cat.id})}">
+                        <i class="fa-solid fa-hashtag"></i> <span th:text="${cat.name}">Kategori</span>
+                    </a>
+                </li>
+            </ul>
+
+            <form class="d-flex search-form mx-lg-3" th:action="@{/events}" method="GET">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="keyword" th:value="${keyword}" placeholder="Etkinlik veya mekan ara...">
+                    <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+
+            <ul class="navbar-nav align-items-lg-center flex-wrap">
+                
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-btn" th:href="@{/admin/dashboard}">
+                        <i class="fa-solid fa-shield-halved"></i> Admin Panel
+                    </a>
+                </li>
+                
+                <li class="nav-item d-flex flex-wrap" sec:authorize="!isAuthenticated()">
+                    <a class="nav-btn" th:href="@{/login}"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</a>
+                    <a class="nav-btn" th:href="@{/register}"><i class="fa-solid fa-user-plus"></i> Kayıt Ol</a>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-btn dropdown-toggle" href="#" id="userDrop" role="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-circle-user text-white"></i> <span sec:authentication="name">Hesabım</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><a class="dropdown-item" th:href="@{/profile}"><i class="fa-regular fa-id-badge me-2 text-secondary"></i>Profilim</a></li>
+                        <li><a class="dropdown-item" th:href="@{/tickets}"><i class="fa-solid fa-ticket me-2 text-secondary"></i>Biletlerim</a></li>
+                        <li><hr class="dropdown-divider m-0"></li>
+                        <li><a class="dropdown-item text-danger fw-bold" th:href="@{/logout}"><i class="fa-solid fa-power-off me-2"></i>Çıkış Yap</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-banner p-0">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-indicators">
+            <button type="button" th:each="featEvent, stat : ${featuredEvents}" data-bs-target="#heroCarousel" th:data-bs-slide-to="${stat.index}" th:classappend="${stat.index == 0} ? 'active'"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item" th:each="featEvent, stat : ${featuredEvents}" th:classappend="${stat.index == 0} ? 'active'">
+                <div class="d-flex align-items-center justify-content-center position-relative" style="height: 400px; background-size: cover; background-position: center top;" th:styleappend="'background-image: url(' + (${featEvent.imageUrl != null and !featEvent.imageUrl.isEmpty() ? featEvent.imageUrl : 'https://via.placeholder.com/1200x450/ed1c24/ffffff?text=Etkinlik'}) + ');'">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(237, 28, 36, 0.2) 100%);"></div>
+                    <div class="container text-center text-white position-relative" style="z-index: 2;">
+                        <span class="badge bg-danger mb-3 px-3 py-2 fs-6 fw-bold shadow" th:text="${featEvent.category.name}">Kategori</span>
+                        <h1 class="hero-title text-white" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);" th:text="${featEvent.title}">Etkinlik Başlığı</h1>
+                        <p class="hero-subtitle text-white fw-medium mb-4" style="text-shadow: 1px 1px 5px rgba(0,0,0,0.8); font-size:1.1rem;">
+                            <i class="fa-solid fa-location-dot me-1"></i> <span th:text="${featEvent.location.name}">Mekan</span> &nbsp;|&nbsp; 
+                            <i class="fa-regular fa-calendar me-1"></i> <span th:text="${#temporals.format(featEvent.startDate, 'dd MMMM yyyy HH:mm')}">Tarih</span>
+                        </p>
+                        <a th:href="@{/events/{id}(id=${featEvent.id})}" class="btn btn-light text-danger fw-bold px-5 py-2 rounded-pill shadow-lg"><i class="fa-solid fa-ticket me-2"></i> Bilet Al</a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${featuredEvents == null or featuredEvents.isEmpty()}" class="carousel-item active">
+                 <div class="d-flex align-items-center justify-content-center" style="height: 400px; background: linear-gradient(135deg, #ed1c24 0%, #ff4d4d 100%);">
+                    <div class="container text-center text-white">
+                        <h1 class="hero-title text-white">En İyi Etkinlikleri Keşfet</h1>
+                        <p class="hero-subtitle text-white">Konser, tiyatro ve daha fazlası için biletin burada hazır.</p>
+                    </div>
+                 </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+    </div>
+</div>
+
+<div class="container pb-5">
+    
+    <div class="filter-bar">
+        <form th:action="@{/events}" method="GET" class="row g-2 align-items-center">
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <div class="col-md-3">
+                <select name="categoryId" class="form-select">
+                    <option value="">Tüm Kategoriler</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${selectedCategoryId == cat.id}"></option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="locationId" class="form-select">
+                    <option value="">Tüm Mekanlar</option>
+                    <option th:each="loc : ${locations}" th:value="${loc.id}" th:text="${loc.name}" th:selected="${selectedLocationId == loc.id}"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="eventDate" class="form-control" th:value="${selectedDate}" title="Etkinlik Tarihi">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="maxPrice" class="form-control" placeholder="Max Fiyat (TL)" th:value="${selectedPrice}">
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button type="submit" class="btn btn-danger w-100 fw-bold" style="border-radius: 8px;"><i class="fa-solid fa-filter me-1"></i> Bul</button>
+                <a th:href="@{/events}" class="btn btn-secondary fw-bold" style="border-radius: 8px;" title="Temizle"><i class="fa-solid fa-eraser"></i></a>
+            </div>
+        </form>
     </div>
 
-    <div class="user-menu-container">
-    <div class="account-capsule" onclick="toggleMenu()">
-        <div class="account-circle">NÇ</div>
-        <span class="account-text">Hesabım</span>
-        <span id="menu-arrow" class="account-arrow">⌵</span>
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <h3 class="fw-bold m-0" style="color: var(--text-main);">Etkinlikleri Keşfet</h3>
+        <span th:if="${keyword != null or selectedCategoryId != null or selectedLocationId != null or selectedDate != null or selectedPrice != null}" class="badge bg-danger fs-6 rounded-pill px-3 py-2">
+            Filtrelenmiş Sonuçlar <a th:href="@{/events}" class="text-white ms-2 text-decoration-none"><i class="fa-solid fa-xmark"></i></a>
+        </span>
     </div>
     
-    <div id="dropdownMenu" class="dropdown-content">
-        <a href="profile.html"><span class="menu-icon">👤</span> Profilim</a>
-        <a href="tickets.html"><span class="menu-icon">🎟</span> Biletlerim</a>
-        <a href="#"><span class="menu-icon">❤️</span> Favorilerim</a>
-        <a href="#"><span class="menu-icon">⭐</span> Değerlendirmelerim</a>
-        <hr>
-        <a href="#"><span class="menu-icon">⚙️</span> Ayarlar</a>
-        <a href="#"><span class="menu-icon">🎧</span> Destek</a>
-        <hr>
-        <a href="login.html" class="logout-link"><span class="menu-icon">↪</span> Çıkış Yap</a>
+    <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="event : ${events}">
+            <a th:href="@{/events/{id}(id=${event.id})}" class="text-decoration-none">
+                <div class="event-card">
+                    <div class="card-img-wrapper">
+                        <div class="badge-date">
+                            <span class="day" th:text="${#temporals.format(event.startDate, 'dd')}">01</span>
+                            <span class="month" th:text="${#temporals.format(event.startDate, 'MMM')}">Oca</span>
+                        </div>
+                        <span class="badge-category" th:text="${event.category != null ? event.category.name : 'Genel'}">Kategori</span>
+                        <img th:src="${event.imageUrl != null and !event.imageUrl.isEmpty() ? event.imageUrl : 'https://via.placeholder.com/400x500/f4f6f8/ed1c24?text=Afi%C5%9F+Yok'}" class="card-img-top" alt="Etkinlik Afişi">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${event.title}">Etkinlik Adı</h5>
+                        <div class="card-location">
+                            <i class="fa-solid fa-location-dot"></i> <span th:text="${event.location != null ? event.location.name : 'Mekan Belirtilmemiş'}">Mekan</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div th:if="${events == null or events.isEmpty()}" class="col-12 text-center py-5">
+            <i class="fa-solid fa-magnifying-glass text-secondary mb-3 opacity-50" style="font-size: 3rem;"></i>
+            <h5 class="text-secondary fw-bold">Aradığınız kriterlere uygun etkinlik bulunamadı.</h5>
+            <a th:href="@{/events}" class="btn btn-danger mt-3 fw-bold px-4 rounded-pill">Tüm Etkinlikleri Göster</a>
+        </div>
     </div>
 </div>
-</div>
-</header>
 
-<div class="layout">
-    <aside class="sidebar">
-        <div class="filter">Tarih</div>
-        <div class="filter">Fiyat Aralığı</div>
-        <div class="filter">Mekan</div>
-        <div class="filter">Diğer Filtreler</div>
-    </aside>
-
-    <main class="main">
-        <div class="topbar">
-            <div class="sort">↕ Öne Çıkanlar</div>
-            <div class="view">
-                <div class="icon active"></div>
-                <div class="icon"></div>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <div class="img img1"></div>
-                <div class="card-body">
-                    <h3>Tiesto - İstanbul Festivali</h3>
-                    <p>Festival Park Yenikapı</p>
-                    <span>08 Ağustos Cts 21:30</span>
-                    <div class="price">2000₺</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img img2"></div>
-                <div class="card-body">
-                    <h3>Yalın “Bir Büyülü Gece”</h3>
-                    <p>Volkswagen Arena</p>
-                    <span>22 Mayıs, 24 Mayıs</span>
-                    <div class="price">2100₺</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img img3"></div>
-                <div class="card-body">
-                    <h3>Fazıl Say Jazz Quintet</h3>
-                    <p>Harbiye Açıkhava</p>
-                    <span>02 Eylül, 03 Eylül</span>
-                    <div class="status">● Yakında Satışta</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img img4"></div>
-                <div class="card-body">
-                    <h3>K-POP İstanbul Festivali</h3>
-                    <p>Festival Park Yenikapı</p>
-                    <span>14 Ağustos, 15 Ağustos</span>
-                    <div class="price">2000₺</div>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
-
-<script>
-    function toggleMenu() {
-        var menu = document.getElementById("dropdownMenu");
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-        } else {
-            menu.style.display = "block";
-        }
-    }
-
-    window.onclick = function(event) {
-        if (!event.target.closest('.user-menu-container')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            for (var i = 0; i < dropdowns.length; i++) {
-                dropdowns[i].style.display = "none";
-            }
-        }
-    }
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -20,16 +20,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/login",
-                    "/register",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/static/**",
-                    "/api/auth/**",
+                    "/", 
+                    "/events", 
+                    "/events/**", // Ana sayfa ve tüm etkinlik detayları herkese açık
+                    "/login", 
+                    "/register", 
+                    "/forgot-password/**", 
+                    "/css/**", 
+                    "/js/**", 
+                    "/images/**", 
+                    "/static/**", 
+                    "/api/auth/**", 
                     "/api/events/**"
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN") 
@@ -37,11 +40,13 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/events", true)
+                .defaultSuccessUrl("/events", true) // Giriş yapınca ana sayfaya git
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/events") // Çıkış yapınca ana sayfaya dön
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
                 .permitAll()
             )
             .rememberMe(remember -> remember

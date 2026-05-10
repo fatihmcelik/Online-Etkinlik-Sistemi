@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -25,7 +26,6 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user) {
-        // KRİTİK DÜZELTME: Çift kayıt (Duplicate) kontrolü
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Bu kullanıcı adı zaten alınmış.");
         }
@@ -53,7 +53,7 @@ public class UserService {
             int currentAttempts = user.getFailedLoginAttempts() + 1;
             user.setFailedLoginAttempts(currentAttempts);
             if (currentAttempts >= 5) {
-                user.setActive(false);
+                user.setActive(false); // Hesap kilitlenir
             }
             userRepository.save(user);
         });
@@ -66,6 +66,45 @@ public class UserService {
             user.setLastLoginAt(LocalDateTime.now());
             userRepository.save(user);
         });
+    }
+
+    // --- YENİ EKLENEN METOTLAR ---
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Transactional
+    public void unlockUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        user.setActive(true);
+        user.setFailedLoginAttempts(0);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void toggleUserActiveStatus(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUserProfile(String currentUsername, String firstName, String lastName, String email) {
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+
+        // Eğer e-posta değiştiyse ve yeni e-posta başkasına aitse hata fırlat
+        if (!user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Bu e-posta adresi başka bir hesap tarafından kullanılıyor.");
+        }
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        userRepository.save(user);
     }
 
     public User findByUsername(String username) {

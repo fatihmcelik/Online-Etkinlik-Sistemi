@@ -1,5 +1,6 @@
 package com.etkinlik.online_etkinlik.model;
 
+import com.etkinlik.online_etkinlik.model.enums.TicketStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -11,25 +12,23 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // YENİ: Benzersiz bilet kodu — QR veya barkodda kullanılır
     @Column(nullable = false, unique = true)
     private String ticketCode;
 
-    // BEKLIYOR, ODENDI, IPTAL
+    // YENİ: String yerine güvenli Enum yapısına geçildi
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private TicketStatus status;
 
     @Column(nullable = false)
     private LocalDateTime purchaseDate = LocalDateTime.now();
 
-    // YENİ: QR kod görseli için base64 veya URL
     private String qrCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // YENİ: Hangi etkinliğe ait — kritik eksikti
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
@@ -45,8 +44,8 @@ public class Ticket {
     public String getTicketCode() { return ticketCode; }
     public void setTicketCode(String ticketCode) { this.ticketCode = ticketCode; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public TicketStatus getStatus() { return status; }
+    public void setStatus(TicketStatus status) { this.status = status; }
 
     public LocalDateTime getPurchaseDate() { return purchaseDate; }
     public void setPurchaseDate(LocalDateTime purchaseDate) { this.purchaseDate = purchaseDate; }

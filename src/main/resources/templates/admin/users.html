@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Yönetimi - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg-base: #f4f6f8; --bg-card: #ffffff; --accent: #ed1c24; --text-main: #2b2b2b; --text-sec: #6c757d; --border-color: #e5e5e5; }
+        body { background-color: var(--bg-base); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .sidebar { background-color: var(--bg-card); min-height: 100vh; border-right: 1px solid var(--border-color); padding-top: 2rem; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .sidebar-brand { color: var(--accent); font-weight: 800; font-size: 1.5rem; text-align: center; display: block; padding: 1rem; margin-bottom: 1rem; text-decoration: none; }
+        .sidebar-link { color: var(--text-sec); text-decoration: none; padding: 0.85rem 1.5rem; display: block; font-weight: 600; transition: 0.3s; border-left: 4px solid transparent; }
+        .sidebar-link:hover, .sidebar-link.active { color: var(--accent); background-color: #fff0f1; border-left: 4px solid var(--accent); }
+        .content { padding: 2.5rem; }
+        .table-wrapper { background-color: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        .table thead th { background-color: #f8f9fa; color: var(--text-sec); font-weight: 600; padding: 1rem; }
+        .table tbody td { padding: 1rem; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+<div class="row g-0">
+    <div class="col-md-2 sidebar">
+        <a class="sidebar-brand" th:href="@{/admin/dashboard}">Eventia</a>
+        <div class="px-3 mb-2 small fw-bold text-uppercase text-muted">Yönetim</div>
+        <a th:href="@{/admin/dashboard}" class="sidebar-link"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a>
+        <a th:href="@{/admin/users}" class="sidebar-link active"><i class="fa-solid fa-users me-2"></i>Kullanıcılar</a>
+        <a th:href="@{/admin/categories}" class="sidebar-link"><i class="fa-solid fa-tags me-2"></i>Kategoriler</a>
+        <a th:href="@{/admin/locations}" class="sidebar-link"><i class="fa-solid fa-location-dot me-2"></i>Mekanlar</a>
+        <a th:href="@{/admin/logs}" class="sidebar-link"><i class="fa-solid fa-shield-halved me-2"></i>Sistem Logları</a>
+        <hr style="border-color: var(--border-color); margin: 1.5rem 1rem;">
+        <a th:href="@{/events}" class="sidebar-link"><i class="fa-solid fa-globe me-2"></i>Siteye Dön</a>
+    </div>
+
+    <div class="col-md-10 content">
+        <h2 class="fw-bold mb-4 text-dark">Kullanıcı Yönetimi</h2>
+        <div class="table-wrapper">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>Ad Soyad</th>
+                            <th>E-posta</th>
+                            <th>Kilit Durumu</th>
+                            <th>Hesap Durumu</th>
+                            <th class="text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td class="fw-bold" th:text="${user.username}">Username</td>
+                            <td th:text="${user.firstName + ' ' + user.lastName}">Ad Soyad</td>
+                            <td class="text-secondary" th:text="${user.email}">Email</td>
+                            <td>
+                                <span th:if="${user.failedLoginAttempts >= 5}" class="badge bg-danger"><i class="fa-solid fa-lock"></i> Kilitli</span>
+                                <span th:unless="${user.failedLoginAttempts >= 5}" class="badge bg-success">Temiz</span>
+                            </td>
+                            <td>
+                                <span th:if="${user.active}" class="badge bg-primary">Aktif</span>
+                                <span th:unless="${user.active}" class="badge bg-secondary">Pasif</span>
+                            </td>
+                            <td class="text-end">
+                                <form th:if="${user.failedLoginAttempts >= 5}" th:action="@{/admin/users/unlock/{id}(id=${user.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success fw-bold"><i class="fa-solid fa-unlock"></i> Kilidi Aç</button>
+                                </form>
+                                <form th:action="@{/admin/users/toggle/{id}(id=${user.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning fw-bold ms-1" th:text="${user.active ? 'Pasife Al' : 'Aktife Al'}">Değiştir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

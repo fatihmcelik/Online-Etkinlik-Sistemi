@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard - Eventia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg-base: #f4f6f8; 
+            --bg-card: #ffffff; 
+            --accent: #ed1c24; 
+            --text-main: #2b2b2b; 
+            --text-sec: #6c757d; 
+            --border-color: #e5e5e5;
+        }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .sidebar { background-color: var(--bg-card); min-height: 100vh; border-right: 1px solid var(--border-color); padding-top: 2rem; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .sidebar-brand { color: var(--accent); font-weight: 900; font-size: 1.8rem; text-align: center; display: block; padding: 1rem; margin-bottom: 1rem; text-decoration: none; letter-spacing: -1px;}
+        .sidebar-link { color: var(--text-sec); text-decoration: none; padding: 0.85rem 1.5rem; display: block; font-weight: 600; transition: 0.3s; border-left: 4px solid transparent; }
+        .sidebar-link:hover, .sidebar-link.active { color: var(--accent); background-color: #fff0f1; border-left: 4px solid var(--accent); }
+        .sidebar-link.danger { color: #dc3545; }
+        .sidebar-link.danger:hover { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+        
+        .content { padding: 2.5rem; }
+        
+        .stat-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; }
+        .stat-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+        
+        .table-wrapper { background-color: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        .table thead th { background-color: #f8f9fa; color: var(--text-sec); font-weight: 600; border-bottom: 2px solid var(--border-color); padding: 1rem; }
+        .table tbody td { padding: 1rem; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+        
+        .log-item { padding: 1rem; border-bottom: 1px solid var(--border-color); }
+        .log-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+<div class="row g-0">
+
+    <div class="col-md-2 sidebar">
+        <a class="sidebar-brand" th:href="@{/admin/dashboard}">Eventia</a>
+        <div class="px-3 mb-2 small fw-bold text-uppercase text-muted">Yönetim</div>
+        <a th:href="@{/admin/dashboard}" class="sidebar-link active"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a>
+        <a th:href="@{/admin/users}" class="sidebar-link"><i class="fa-solid fa-users me-2"></i>Kullanıcılar</a>
+        <a th:href="@{/admin/categories}" class="sidebar-link"><i class="fa-solid fa-tags me-2"></i>Kategoriler</a>
+        <a th:href="@{/admin/locations}" class="sidebar-link"><i class="fa-solid fa-location-dot me-2"></i>Mekanlar</a>
+        <a th:href="@{/admin/logs}" class="sidebar-link"><i class="fa-solid fa-shield-halved me-2"></i>Sistem Logları</a>
+        <hr style="border-color: var(--border-color); margin: 1.5rem 1rem;">
+        <a th:href="@{/events}" class="sidebar-link"><i class="fa-solid fa-globe me-2"></i>Siteye Dön</a>
+        <a th:href="@{/logout}" class="sidebar-link danger"><i class="fa-solid fa-power-off me-2"></i>Çıkış Yap</a>
+    </div>
+
+    <div class="col-md-10 content">
+        <h2 class="fw-bold mb-4 text-dark">Genel Bakış</h2>
+        
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="text-secondary small fw-bold text-uppercase mb-1">Toplam Kullanıcı</div>
+                        <h3 class="fw-bold m-0" th:text="${totalUsers}">0</h3>
+                    </div>
+                    <div class="stat-icon" style="background-color: #e0f2fe; color: #198754;"><i class="fa-solid fa-users"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="text-secondary small fw-bold text-uppercase mb-1">Satılan Bilet</div>
+                        <h3 class="fw-bold m-0" th:text="${totalTickets}">0</h3>
+                    </div>
+                    <div class="stat-icon" style="background-color: #fff3cd; color: #dc3545;"><i class="fa-solid fa-ticket"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="text-secondary small fw-bold text-uppercase mb-1">Toplam Ciro</div>
+                        <h3 class="fw-bold m-0" th:text="${totalRevenue + ' TL'}">0 TL</h3>
+                    </div>
+                    <div class="stat-icon" style="background-color: #e2e3e5; color: #495057;"><i class="fa-solid fa-wallet"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="text-secondary small fw-bold text-uppercase mb-1">Aktif Etkinlik</div>
+                        <h3 class="fw-bold m-0" th:text="${totalEvents}">0</h3>
+                    </div>
+                    <div class="stat-icon" style="background-color: #cff4fc; color: #0dcaf0;"><i class="fa-solid fa-calendar-check"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">Etkinlik Yönetimi</h5>
+                    <a th:href="@{/admin/event/new}" class="btn btn-sm btn-danger fw-bold shadow-sm"><i class="fa-solid fa-plus me-1"></i>Yeni Ekle</a>
+                </div>
+                <div class="table-wrapper">
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Etkinlik Adı</th>
+                                    <th>Kategori</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                    <th class="text-end">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="event : ${events}">
+                                    <td class="text-secondary" th:text="${event.id}">1</td>
+                                    <td class="fw-bold text-dark" th:text="${event.title}">Başlık</td>
+                                    <td><span class="badge bg-light text-dark border" th:text="${event.category != null ? event.category.name : '-'}">Kategori</span></td>
+                                    <td class="text-secondary" th:text="${#temporals.format(event.startDate, 'dd.MM.yyyy HH:mm')}">Tarih</td>
+                                    <td>
+                                        <span th:if="${event.active}" class="badge bg-success">Aktif</span>
+                                        <span th:unless="${event.active}" class="badge bg-secondary">Pasif</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
+                                            <a th:href="@{/admin/event/{id}/ticket-types(id=${event.id})}" class="btn btn-sm btn-dark fw-bold" style="white-space: nowrap;">
+                                                <i class="fa-solid fa-ticket me-1"></i> Fiyatlar
+                                            </a>
+                                            <form th:action="@{/admin/event/toggle/{id}(id=${event.id})}" method="post" class="m-0">
+                                                <button type="submit" class="btn btn-sm fw-bold" th:classappend="${event.active ? 'btn-outline-secondary' : 'btn-success'}" th:text="${event.active ? 'Kapat' : 'Aç'}" style="white-space: nowrap;"></button>
+                                            </form>
+                                            <a th:href="@{/admin/event/edit/{id}(id=${event.id})}" class="btn btn-sm btn-primary fw-bold" style="white-space: nowrap;">Düzenle</a>
+                                            <form th:action="@{/admin/event/delete/{id}(id=${event.id})}" method="post" class="m-0" onsubmit="return confirm('Emin misiniz?');">
+                                                <button type="submit" class="btn btn-sm btn-danger fw-bold" style="white-space: nowrap;">Sil</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${events == null or events.isEmpty()}">
+                                    <td colspan="6" class="text-center py-4 text-muted">Hiç etkinlik bulunamadı.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">Son İşlemler</h5>
+                    <a th:href="@{/admin/logs}" class="text-danger small fw-bold text-decoration-none">Tümünü Gör</a>
+                </div>
+                <div class="table-wrapper bg-white">
+                    <div th:each="log : ${recentLogs}" class="log-item">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge bg-dark" th:text="${log.action}">ACTION</span>
+                            <small class="text-muted" th:text="${#temporals.format(log.timestamp, 'HH:mm - dd.MM')}">Zaman</small>
+                        </div>
+                        <div class="small fw-semibold text-dark" th:text="${log.details}">Detay mesajı buraya gelecek.</div>
+                        <div class="text-secondary" style="font-size: 0.75rem; margin-top: 4px;">
+                            <i class="fa-regular fa-user me-1"></i> <span th:text="${log.user != null ? log.user.username : 'Sistem'}">Kullanıcı</span>
+                        </div>
+                    </div>
+                    <div th:if="${recentLogs == null or recentLogs.isEmpty()}" class="p-4 text-center text-muted">
+                        Kayıtlı sistem hareketi yok.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>
